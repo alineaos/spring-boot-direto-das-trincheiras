@@ -1,3 +1,7 @@
 spring:
     application:
         name: anime-service
+server:
+    servlet:
+        context-path: /
+        #context-path: /${spring.application.name} | Usando o nome do projeto na URL por padrão
