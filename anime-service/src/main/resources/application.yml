@@ -1,7 +1,19 @@
 spring:
     application:
         name: anime-service
+    ## criação de threads virtuais
+    threads:
+        virtual:
+            enabled: true
 server:
     servlet:
         context-path: /
         #context-path: /${spring.application.name} | Usando o nome do projeto na URL por padrão
+    error:
+        # Quando mostrar o stacketrace em caso de erro?
+        # always (padrão) - on_param - never (mais recomendado em projetos públicos)
+        include-stacktrace: on_param
+    tomcat:
+        threads:
+            # máximo de threads de plataformas que o tomcat pode utilizar
+            max: 20
