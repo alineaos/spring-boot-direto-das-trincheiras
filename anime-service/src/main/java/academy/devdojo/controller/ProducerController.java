@@ -32,19 +32,29 @@ public class ProducerController {
     private List<Producer> producers = new ArrayList<>(Producer.getProducers());
 
     @GetMapping()
-    public List<Producer> listAll(@RequestParam(required = false) String name) {
-        if (name == null) return producers;
-        return producers.stream()
-                .filter(producer -> producer.getName().equalsIgnoreCase(name))
+    public ResponseEntity<List<ProducerGetResponse>> listAll(@RequestParam(required = false) String name) {
+        log.debug("Request received to list all producers, param name '{}'", name);
+        List<ProducerGetResponse> producerGetResponseList = MAPPER.toProducerGetResponseList(producers);
+        if (name == null) return ResponseEntity.ok(producerGetResponseList);
+
+        List<ProducerGetResponse> response = producerGetResponseList.stream()
+                .filter(p -> p.getName().equalsIgnoreCase(name))
                 .toList();
+        return ResponseEntity.ok(response);
+
     }
 
     @GetMapping("{id}")
-    public Producer findById(@PathVariable long id) {
-        return Producer.getProducers()
-                .stream()
+    public ResponseEntity<ProducerGetResponse> findById(@PathVariable long id) {
+        log.debug("Request to find producer by id: '{}'", id);
+
+        ProducerGetResponse response = producers.stream()
                 .filter(producer -> producer.getId().equals(id))
-                .findFirst().orElse(null);
+                .findFirst()
+                .map(MAPPER::toProducerGetResponse)
+                .orElse(null);
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE,
