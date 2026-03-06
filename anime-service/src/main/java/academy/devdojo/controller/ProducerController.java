@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,11 +19,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 @RestController
 @RequestMapping("v1/producers")
@@ -52,7 +52,7 @@ public class ProducerController {
                 .filter(producer -> producer.getId().equals(id))
                 .findFirst()
                 .map(MAPPER::toProducerGetResponse)
-                .orElse(null);
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producer not Found"));
 
         return ResponseEntity.ok(response);
     }
@@ -80,6 +80,20 @@ public class ProducerController {
                 .build();*/
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable Long id){
+        log.debug("Request to delete producer by id: {}", id);
+
+        Producer producerToDelete = producers.stream()
+                .filter(producer -> producer.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producer not Found"));
+
+        producers.remove(producerToDelete);
+
+        return ResponseEntity.noContent().build();
     }
 
 }
