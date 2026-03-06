@@ -2,6 +2,7 @@ package academy.devdojo.controller;
 
 
 import academy.devdojo.domain.Producer;
+import academy.devdojo.mapper.ProducerMapper;
 import academy.devdojo.request.ProducerPostRequest;
 import academy.devdojo.response.ProducerGetResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @RequestMapping("v1/producers")
 @Slf4j
 public class ProducerController {
+    private static final ProducerMapper MAPPER = ProducerMapper.INSTANCE;
     private List<Producer> producers = new ArrayList<>(Producer.getProducers());
 
     @GetMapping()
@@ -50,19 +52,22 @@ public class ProducerController {
             headers = "x-api-key")
     public ResponseEntity<ProducerGetResponse> save(@RequestBody ProducerPostRequest producerPostRequest, @RequestHeader HttpHeaders headers) {
         log.info("{}", headers);
-        Producer producer = Producer.builder()
+
+        Producer producer = MAPPER.toProducer(producerPostRequest);
+        /*Producer producer = Producer.builder()
                 .id(ThreadLocalRandom.current().nextLong(100_000)) //settando o id nesse momento, o que foi passado na requisição será ignorado
                 .name(producerPostRequest.getName())
                 .createdAt(LocalDateTime.now())
-                .build();
+                .build();*/
 
-        Producer.getProducers().add(producer);
+        producers.add(producer);
 
-        ProducerGetResponse response = ProducerGetResponse.builder()
+        ProducerGetResponse response = MAPPER.toProducerGetResponse(producer);
+        /*ProducerGetResponse response = ProducerGetResponse.builder()
                 .id(producer.getId())
                 .name(producer.getName())
                 .createdAt(producer.getCreatedAt())
-                .build();
+                .build();*/
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
