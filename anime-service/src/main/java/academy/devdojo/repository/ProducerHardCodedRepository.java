@@ -16,43 +16,34 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Log4j2
 public class ProducerHardCodedRepository {
-    private static final List<Producer> PRODUCERS = new ArrayList<>();
+    private final ProducerData producerData;
     @Qualifier(value = "connectionMongoDB")
     private final Connection connection;
 
-    static {
-        Producer mappa = Producer.builder().id(1L).name("Mappa").createdAt(LocalDateTime.now()).build();
-        Producer toeiAnimation = Producer.builder().id(2L).name("Toei Animation").createdAt(LocalDateTime.now()).build();
-        Producer madhouse = Producer.builder().id(3L).name("Madhouse").createdAt(LocalDateTime.now()).build();
-        Producer pierrotStudio = Producer.builder().id(4L).name("Studio Pierrot").createdAt(LocalDateTime.now()).build();
-        Producer witStudio = Producer.builder().id(5L).name("Wit Studio").createdAt(LocalDateTime.now()).build();
-        PRODUCERS.addAll(List.of(mappa, toeiAnimation, madhouse, pierrotStudio, witStudio));
-    }
-
     public List<Producer> findAll() {
-        return PRODUCERS;
+        return producerData.getProducers();
     }
 
     public Optional<Producer> findById(Long id){
-        return PRODUCERS.stream()
+        return producerData.getProducers().stream()
                 .filter(producer ->  producer.getId().equals(id))
                 .findFirst();
     }
 
     public List<Producer> findByName(String name){
         log.debug(connection);
-        return PRODUCERS.stream()
+        return producerData.getProducers().stream()
                 .filter(producer -> producer.getName().equalsIgnoreCase(name))
                 .toList();
     }
 
     public Producer save(Producer producer){
-        PRODUCERS.add(producer);
+        producerData.getProducers().add(producer);
         return producer;
     }
 
     public void delete(Producer producer){
-        PRODUCERS.remove(producer);
+        producerData.getProducers().remove(producer);
     }
 
     public void update(Producer producer){
