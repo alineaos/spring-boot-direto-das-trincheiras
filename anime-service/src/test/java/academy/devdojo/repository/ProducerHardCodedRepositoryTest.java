@@ -71,9 +71,9 @@ class ProducerHardCodedRepositoryTest {
     }
 
     @Test
-    @DisplayName("findByName returnslist with found objects when name exists")
+    @DisplayName("findByName returns list with found objects when name exists")
     @Order(4)
-    void findByName_ReturnsFoundPRoducerInList_WhenNameIsFound() {
+    void findByName_ReturnsFoundProducerInList_WhenNameIsFound() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
 
         Producer expectedProducer = producerList.getFirst();
@@ -113,7 +113,7 @@ class ProducerHardCodedRepositoryTest {
 
     @Test
     @DisplayName("update updates a producer")
-    @Order(7)
+    @Order(7 )
     void update_UpdatesProducer_WhenSuccessful() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
 
@@ -127,7 +127,5 @@ class ProducerHardCodedRepositoryTest {
         Optional<Producer> producerUpdatedOptional = repository.findById(producerToUpdate.getId());
         Assertions.assertThat(producerUpdatedOptional).isPresent();
         Assertions.assertThat(producerUpdatedOptional.get().getName()).isEqualTo(producerToUpdate.getName());
-
-
     }
 }
