@@ -15,8 +15,8 @@ import java.util.Optional;
 @Log4j2
 public class ProducerHardCodedRepository {
     private final ProducerData producerData;
-    @Qualifier(value = "connectionMongoDB")
-    private final Connection connection;
+//    @Qualifier(value = "connectionMongoDB")
+//    private final Connection connection;
 
     public List<Producer> findAll() {
         return producerData.getProducers();
@@ -29,7 +29,7 @@ public class ProducerHardCodedRepository {
     }
 
     public List<Producer> findByName(String name){
-        log.debug(connection);
+//        log.debug(connection);
         return producerData.getProducers().stream()
                 .filter(producer -> producer.getName().equalsIgnoreCase(name))
                 .toList();
