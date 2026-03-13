@@ -121,7 +121,7 @@ class ProducerServiceTest {
     }
 
     @Test
-    @DisplayName("delete delete throws ResponseStatusException when producer is not found")
+    @DisplayName("delete throws ResponseStatusException when producer is not found")
     @Order(8)
     void delete_ThrowsResponseStatusException_WhenProducerIsNotFound() {
         Producer producerToDelete = producerList.getFirst();
@@ -146,7 +146,7 @@ class ProducerServiceTest {
 
     @Test
     @DisplayName("update throws ResponseStatusException when producer is not found")
-    @Order(9)
+    @Order(10)
     void update_ThrowsResponseStatusException_WhenProducerIsNotFound() {
         Producer producerToUpdate = producerList.getFirst();
         BDDMockito.when(repository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.empty());
