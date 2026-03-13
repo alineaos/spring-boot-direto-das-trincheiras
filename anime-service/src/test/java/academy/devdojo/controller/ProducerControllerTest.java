@@ -1,5 +1,7 @@
 package academy.devdojo.controller;
 
+import academy.devdojo.commons.FileUtils;
+import academy.devdojo.commons.ProducerUtils;
 import academy.devdojo.domain.Producer;
 import academy.devdojo.repository.ProducerData;
 import academy.devdojo.repository.ProducerHardCodedRepository;
@@ -16,19 +18,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 @WebMvcTest(controllers = ProducerController.class)
@@ -36,29 +31,22 @@ import java.util.List;
 @ComponentScan(basePackages = "academy.devdojo") // importa as classes, melhor para projetos pequenos e/ou com muitos importes
 //@Import({ProducerMapperImpl.class, ProducerService.class, ProducerHardCodedRepository.class, ProducerData.class}) // melhor para projetos grandes e/ou poucos importes
 class ProducerControllerTest {
+    private static final String URL = "/v1/producers";
     @Autowired
     private MockMvc mockMvc;
     @MockBean
     private ProducerData producerData;
     @SpyBean
     private ProducerHardCodedRepository repository;
+    private List<Producer> producerList;
     @Autowired
-    private ResourceLoader resourceLoader;
-
-    private final List<Producer> producerList = new ArrayList<>();
+    private FileUtils fileUtils;
+    @Autowired
+    private ProducerUtils producerUtils;
 
     @BeforeEach
     void init() {
-        String dateTime = "2026-03-12T16:23:08.5225638";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS");
-        LocalDateTime localDateTime = LocalDateTime.parse(dateTime, formatter);
-
-        Producer ufotable = Producer.builder().id(1L).name("Ufotable").createdAt(localDateTime).build();
-        Producer a1Pictures = Producer.builder().id(2L).name("A-1 Pictures").createdAt(localDateTime).build();
-        Producer davidProduction = Producer.builder().id(3L).name("David Production").createdAt(localDateTime).build();
-        Producer studioBones = Producer.builder().id(4L).name("Studio Bones").createdAt(localDateTime).build();
-        Producer productionIG = Producer.builder().id(5L).name("Production I. G.").createdAt(localDateTime).build();
-        producerList.addAll(List.of(ufotable, a1Pictures, davidProduction, studioBones, productionIG));
+        producerList = producerUtils.newProducerList();
     }
 
     @Test
@@ -67,9 +55,9 @@ class ProducerControllerTest {
     void findAll_ReturnsAllProducers_WhenNameIsNull() throws Exception {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
 
-        String response = readResourceFile("producer/get-producer-null-name-200.json");
+        String response = fileUtils.readResourceFile("producer/get-producer-null-name-200.json");
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/v1/producers"))
+        mockMvc.perform(MockMvcRequestBuilders.get(URL))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(response));
@@ -81,9 +69,9 @@ class ProducerControllerTest {
     void indAll_ReturnsFoundProducerInList_WhenNameIsFound() throws Exception {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
 
-        String response = readResourceFile("producer/get-producer-ufotable-name-200.json");
+        String response = fileUtils.readResourceFile("producer/get-producer-ufotable-name-200.json");
         String name = "Ufotable";
-        mockMvc.perform(MockMvcRequestBuilders.get("/v1/producers").param("name", name))
+        mockMvc.perform(MockMvcRequestBuilders.get(URL).param("name", name))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(response));
@@ -95,10 +83,10 @@ class ProducerControllerTest {
     void findAll_ReturnsEmptyList_WhenNameIsNotFound() throws Exception {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
 
-        String response = readResourceFile("producer/get-producer-x-name-200.json");
+        String response = fileUtils.readResourceFile("producer/get-producer-x-name-200.json");
         String name = "x";
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/v1/producers").param("name", name))
+        mockMvc.perform(MockMvcRequestBuilders.get(URL).param("name", name))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(response));
@@ -110,10 +98,10 @@ class ProducerControllerTest {
     void findById_ReturnsProducerById_WhenSuccessful() throws Exception {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
 
-        String response = readResourceFile("producer/get-producer-by-id-200.json");
+        String response = fileUtils.readResourceFile("producer/get-producer-by-id-200.json");
         Long id = 1L;
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/v1/producers/{id}", id))
+        mockMvc.perform(MockMvcRequestBuilders.get(URL + "/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(response));
@@ -127,7 +115,7 @@ class ProducerControllerTest {
 
         Long id = 99L;
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/v1/producers/{id}", id))
+        mockMvc.perform(MockMvcRequestBuilders.get(URL + "/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.status().reason("Producer not Found"));
@@ -137,14 +125,14 @@ class ProducerControllerTest {
     @DisplayName("POST v1/producers creates a producer")
     @Order(6)
     void save_CreatesProducer_WhenSuccessful() throws Exception {
-        String request = readResourceFile("producer/post-request-producer-200.json");
-        String response = readResourceFile("producer/post-response-producer-200.json");
-        Producer producerToSave = Producer.builder().id(99L).name("MAPPA").createdAt(LocalDateTime.now()).build();
+        String request = fileUtils.readResourceFile("producer/post-request-producer-200.json");
+        String response = fileUtils.readResourceFile("producer/post-response-producer-200.json");
+        Producer producerToSave = producerUtils.newProducerToSave();
 
         BDDMockito.when(repository.save(ArgumentMatchers.any())).thenReturn(producerToSave);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/v1/producers")
+                        .post(URL)
                         .content(request)
                         .header("x-api-key", "v1")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -158,12 +146,12 @@ class ProducerControllerTest {
     @DisplayName("PUT v1/producers updates a producer")
     @Order(7)
     void update_UpdatesProducer_WhenSuccessful() throws Exception {
-        String request = readResourceFile("producer/put-request-producer-200.json");
+        String request = fileUtils.readResourceFile("producer/put-request-producer-200.json");
 
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/v1/producers")
+                        .put(URL)
                         .content(request)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
@@ -174,10 +162,10 @@ class ProducerControllerTest {
     @DisplayName("PUT v1/producers throws ResponseStatusException when producer is not found")
     @Order(8)
     void update_ThrowsResponseStatusException_WhenProducerIsNotFound() throws Exception {
-        String request = readResourceFile("producer/put-request-producer-200.json");
+        String request = fileUtils.readResourceFile("producer/put-request-producer-200.json");
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/v1/producers")
+                        .put(URL)
                         .content(request)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
@@ -193,7 +181,7 @@ class ProducerControllerTest {
 
         Long id = producerList.getFirst().getId();
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/v1/producers/{id}", id))
+        mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
@@ -206,14 +194,9 @@ class ProducerControllerTest {
 
         Long id = 99L;
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/v1/producers/{id}", id))
+        mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.status().reason("Producer not Found"));
-    }
-
-    private String readResourceFile(String fileName) throws IOException {
-        File file = resourceLoader.getResource("classpath:%s".formatted(fileName)).getFile();
-        return new String(Files.readAllBytes(file.toPath()));
     }
 }

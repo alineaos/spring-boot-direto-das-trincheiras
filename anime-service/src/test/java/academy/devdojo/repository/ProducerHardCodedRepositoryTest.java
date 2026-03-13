@@ -1,5 +1,6 @@
 package academy.devdojo.repository;
 
+import academy.devdojo.commons.ProducerUtils;
 import academy.devdojo.domain.Producer;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,8 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,16 +26,13 @@ class ProducerHardCodedRepositoryTest {
     private ProducerHardCodedRepository repository;
     @Mock
     private ProducerData producerData;
-    private final List<Producer> producerList = new ArrayList<>();
+    private List<Producer> producerList;
+    @InjectMocks
+    private ProducerUtils producerUtils;
 
     @BeforeEach
     void init() {
-        Producer ufotable = Producer.builder().id(1L).name("Ufotable").createdAt(LocalDateTime.now()).build();
-        Producer a1Pictures = Producer.builder().id(2L).name("A-1 Pictures").createdAt(LocalDateTime.now()).build();
-        Producer davidProduction = Producer.builder().id(3L).name("David Production").createdAt(LocalDateTime.now()).build();
-        Producer studioBones = Producer.builder().id(4L).name("Studio Bones").createdAt(LocalDateTime.now()).build();
-        Producer productionIG = Producer.builder().id(5L).name("Production I. G.").createdAt(LocalDateTime.now()).build();
-        producerList.addAll(List.of(ufotable, a1Pictures, davidProduction, studioBones, productionIG));
+        producerList = producerUtils.newProducerList();
     }
 
     @Test
@@ -87,7 +83,7 @@ class ProducerHardCodedRepositoryTest {
     void save_CreatesProducer_WhenSuccessful() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
 
-        Producer producerToSave = Producer.builder().id(99L).name("MAPPA").createdAt(LocalDateTime.now()).build();
+        Producer producerToSave = producerUtils.newProducerToSave();
         Producer producer = repository.save(producerToSave);
 
         Assertions.assertThat(producer).isEqualTo(producerToSave).hasNoNullFieldsOrProperties();
