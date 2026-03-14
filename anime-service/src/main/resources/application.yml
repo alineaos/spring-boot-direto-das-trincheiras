@@ -23,6 +23,6 @@ server:
       # máximo de threads de plataformas que o tomcat pode utilizar
       max: 20
 database:
-  url: localhost:3306
-  username: root
-  password: root
+  url: ${DB_URL:localhost}:${DB_PORT:3306}
+  username: ${LOCAL_USERNAME:root}
+  password: ${LOCAL_PASSWORD:root}
