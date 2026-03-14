@@ -1,22 +1,28 @@
 spring:
+  #profiles: | Definindo os profiles ativos
+    #active: mysql, mongo
     application:
-        name: anime-service
-    ## criação de threads virtuais
+      name: anime-service
+    # criação de threads virtuais
     threads:
-        virtual:
-            enabled: true
+      virtual:
+        enabled: true
 logging:
-    level:
-        academy.devdojo: debug
+  level:
+    academy.devdojo: debug
 server:
-    servlet:
-        context-path: /
-        #context-path: /${spring.application.name} | Usando o nome do projeto na URL por padrão
-    error:
-        # Quando mostrar o stacketrace em caso de erro?
-        # always (padrão) - on_param - never (mais recomendado em projetos públicos)
-        include-stacktrace: on_param
-    tomcat:
-        threads:
-            # máximo de threads de plataformas que o tomcat pode utilizar
-            max: 20
+  servlet:
+    context-path: /
+    #context-path: /${spring.application.name} | Usando o nome do projeto na URL por padrão
+  error:
+    # Quando mostrar o stacketrace em caso de erro?
+    # always (padrão) - on_param - never (mais recomendado em projetos públicos)
+    include-stacktrace: on_param
+  tomcat:
+    threads:
+      # máximo de threads de plataformas que o tomcat pode utilizar
+      max: 20
+database:
+  url: localhost:3306
+  username: root
+  password: root

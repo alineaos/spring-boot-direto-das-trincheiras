@@ -66,7 +66,7 @@ class AnimeControllerTest {
     @Test
     @DisplayName("GET v1/animes?name=Banana Fish returns list with found object when name exists")
     @Order(2)
-    void indAll_ReturnsFoundAnimeInList_WhenNameIsFound() throws Exception {
+    void findAll_ReturnsFoundAnimeInList_WhenNameIsFound() throws Exception {
         BDDMockito.when(animeData.getAnimes()).thenReturn(animeList);
 
         String response = fileUtils.readResourceFile("anime/get-anime-banana-fish-name-200.json");
