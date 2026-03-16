@@ -164,7 +164,7 @@ class ProducerControllerTest {
     @DisplayName("PUT v1/producers throws ResponseStatusException when producer is not found")
     @Order(8)
     void update_ThrowsResponseStatusException_WhenProducerIsNotFound() throws Exception {
-        String request = fileUtils.readResourceFile("producer/put-request-producer-200.json");
+        String request = fileUtils.readResourceFile("producer/put-request-producer-404.json");
 
         mockMvc.perform(MockMvcRequestBuilders
                         .put(URL)
