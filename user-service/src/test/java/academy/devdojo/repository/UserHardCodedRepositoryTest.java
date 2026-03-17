@@ -96,7 +96,7 @@ class UserHardCodedRepositoryTest {
     @Test
     @DisplayName("delete removes a user")
     @Order(6)
-    void delete_RemoveUser_WhenSuccessul() {
+    void delete_RemoveUser_WhenSuccessful() {
         BDDMockito.when(userData.getUsers()).thenReturn(userList);
 
         User userToDelete = userList.getFirst();

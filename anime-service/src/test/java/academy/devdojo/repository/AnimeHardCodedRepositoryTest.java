@@ -96,7 +96,7 @@ class AnimeHardCodedRepositoryTest {
     @Test
     @DisplayName("delete removes a anime")
     @Order(6)
-    void delete_RemoveAnime_WhenSuccessul() {
+    void delete_RemoveAnime_WhenSuccessful() {
         BDDMockito.when(animeData.getAnimes()).thenReturn(animeList);
 
         Anime animeToDelete = animeList.getFirst();

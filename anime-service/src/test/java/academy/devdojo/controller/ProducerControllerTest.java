@@ -178,7 +178,7 @@ class ProducerControllerTest {
     @Test
     @DisplayName("DELETE v1/producers/1 removes a producer")
     @Order(9)
-    void delete_RemoveProducer_WhenSuccessul() throws Exception {
+    void delete_RemoveProducer_WhenSuccessful() throws Exception {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
 
         Long id = producerList.getFirst().getId();

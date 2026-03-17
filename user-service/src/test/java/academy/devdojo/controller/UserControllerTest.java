@@ -174,7 +174,7 @@ class UserControllerTest {
     @Test
     @DisplayName("DELETE v1/users/1 removes a user")
     @Order(9)
-    void delete_RemoveUser_WhenSuccessul() throws Exception {
+    void delete_RemoveUser_WhenSuccessful() throws Exception {
         BDDMockito.when(userData.getUsers()).thenReturn(userList);
 
         Long id = userList.getFirst().getId();

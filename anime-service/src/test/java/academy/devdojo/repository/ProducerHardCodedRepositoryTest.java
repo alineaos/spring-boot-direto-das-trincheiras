@@ -96,7 +96,7 @@ class ProducerHardCodedRepositoryTest {
     @Test
     @DisplayName("delete removes a producer")
     @Order(6)
-    void delete_RemoveProducer_WhenSuccessul() {
+    void delete_RemoveProducer_WhenSuccessful() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
 
         Producer producerToDelete = producerList.getFirst();

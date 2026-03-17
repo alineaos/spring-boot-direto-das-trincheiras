@@ -175,7 +175,7 @@ class AnimeControllerTest {
     @Test
     @DisplayName("DELETE v1/animes/1 removes a anime")
     @Order(9)
-    void delete_RemoveAnime_WhenSuccessul() throws Exception {
+    void delete_RemoveAnime_WhenSuccessful() throws Exception {
         BDDMockito.when(animeData.getAnimes()).thenReturn(animeList);
 
         Long id = animeList.getFirst().getId();

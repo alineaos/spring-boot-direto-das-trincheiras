@@ -110,7 +110,7 @@ class AnimeServiceTest {
     @Test
     @DisplayName("delete removes a anime")
     @Order(7)
-    void delete_RemoveAnime_WhenSuccessul() {
+    void delete_RemoveAnime_WhenSuccessful() {
         Anime animeToDelete = animeList.getFirst();
         BDDMockito.when(repository.findById(animeToDelete.getId())).thenReturn(Optional.of(animeToDelete));
         BDDMockito.doNothing().when(repository).delete(animeToDelete);
@@ -144,7 +144,7 @@ class AnimeServiceTest {
 
     @Test
     @DisplayName("update throws ResponseStatusException when anime is not found")
-    @Order(9)
+    @Order(10)
     void update_ThrowsResponseStatusException_WhenAnimeIsNotFound() {
         Anime animeToUpdate = animeList.getFirst();
         BDDMockito.when(repository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.empty());
