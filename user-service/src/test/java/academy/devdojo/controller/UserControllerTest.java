@@ -29,6 +29,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
@@ -207,9 +208,9 @@ class UserControllerTest {
 
     @ParameterizedTest
     @MethodSource("postUserBadRequestSource")
-    @DisplayName("POST v1/users returns bad request when fields are empty")
+    @DisplayName("POST v1/users returns bad request when fields are invalid")
     @Order(11)
-    void save_ReturnsBadRequest_WhenFieldsAreEmpty(String fileName, List<String> errors) throws Exception {
+    void save_ReturnsBadRequest_WhenFieldsAreInvalid(String fileName, List<String> errors) throws Exception {
         String request = fileUtils.readResourceFile("user/%s".formatted(fileName));
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
@@ -229,19 +230,62 @@ class UserControllerTest {
                 .contains(errors);
     }
 
+    @ParameterizedTest
+    @MethodSource("putUserBadRequestSource")
+    @DisplayName("PUT v1/users returns bad request when fields are invalid")
+    @Order(12)
+    void update_ReturnsBadRequest_WhenFieldsAreInvalid(String fileName, List<String> errors) throws Exception {
+        String request = fileUtils.readResourceFile("user/%s".formatted(fileName));
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                        .put(URL)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+
+        Exception resolvedException = mvcResult.getResolvedException();
+
+        Assertions.assertThat(resolvedException).isNotNull();
+
+        Assertions.assertThat(resolvedException.getMessage())
+                .contains(errors);
+    }
+
     private static Stream<Arguments> postUserBadRequestSource(){
+        List<String> allRequiredErrors = allRequiredErrors();
+        List<String> invalidEmailErrors = invalidEmailErrors();
+
+        return Stream.of(
+                Arguments.of("post-request-user-empty-fields-400.json", allRequiredErrors),
+                Arguments.of("post-request-user-blank-fields-400.json", allRequiredErrors),
+                Arguments.of("post-request-user-invalid-email-400.json", invalidEmailErrors)
+        );
+    }
+
+    private static Stream<Arguments> putUserBadRequestSource(){
+        List<String> allRequiredErrors = allRequiredErrors();
+        allRequiredErrors.add("The field 'id' cannot be null");
+
+        List<String> emailInvalidError = invalidEmailErrors();
+
+        return Stream.of(
+                Arguments.of("put-request-user-empty-fields-400.json", allRequiredErrors),
+                Arguments.of("put-request-user-blank-fields-400.json", allRequiredErrors),
+                Arguments.of("put-request-user-invalid-email-400.json", emailInvalidError)
+        );
+    }
+
+    private static List<String> invalidEmailErrors(){
+        String emailInvalidError = "The e-mail is not valid";
+        return List.of(emailInvalidError);
+    }
+    private static List<String> allRequiredErrors(){
         String firstNameRequiredError = "The field 'firstName' is required";
         String lastNameRequiredError = "The field 'lastName' is required";
         String emailRequiredError = "The field 'email' is required";
-        String emailInvalidError = "The e-mail is not valid";
-
-        List<String> allErrors = List.of(firstNameRequiredError, lastNameRequiredError, emailRequiredError);
-        List<String> emailError = Collections.singletonList(emailInvalidError);
-
-        return Stream.of(
-                Arguments.of("post-request-user-empty-fields-400.json", allErrors),
-                Arguments.of("post-request-user-blank-fields-400.json", allErrors),
-                Arguments.of("post-request-user-invalid-email-400.json", emailError)
-        );
+        return new ArrayList<>(List.of(firstNameRequiredError, lastNameRequiredError, emailRequiredError));
     }
 }

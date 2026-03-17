@@ -15,7 +15,7 @@ public class UserPutRequest {
     private String firstName;
     @NotBlank(message = "The field 'lastName' is required")
     private String lastName;
-    @NotBlank(message = "The field e-mail is required")
+    @NotBlank(message = "The field 'email' is required")
     @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "The e-mail is not valid")
     private String email;
 }
