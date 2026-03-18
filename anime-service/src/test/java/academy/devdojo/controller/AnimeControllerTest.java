@@ -118,13 +118,14 @@ class AnimeControllerTest {
     @Order(5)
     void findById_ThrowsNotFound_WhenAnimeIsNotFound() throws Exception {
         BDDMockito.when(animeData.getAnimes()).thenReturn(animeList);
+        String response = fileUtils.readResourceFile("anime/get-anime-by-id-404.json");
 
         Long id = 99L;
 
         mockMvc.perform(MockMvcRequestBuilders.get(URL+"/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.status().reason("Anime not Found"));
+                .andExpect(MockMvcResultMatchers.content().json(response));
     }
 
     @Test
@@ -168,6 +169,8 @@ class AnimeControllerTest {
     @Order(8)
     void update_ThrowsNotFound_WhenAnimeIsNotFound() throws Exception {
         String request = fileUtils.readResourceFile("anime/put-request-anime-404.json");
+        String response = fileUtils.readResourceFile("anime/put-anime-by-id-404.json");
+
 
         mockMvc.perform(MockMvcRequestBuilders
                         .put(URL)
@@ -175,7 +178,7 @@ class AnimeControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.status().reason("Anime not Found"));
+                .andExpect(MockMvcResultMatchers.content().json(response));
     }
 
     @Test
@@ -196,13 +199,14 @@ class AnimeControllerTest {
     @Order(10)
     void delete_ThrowsNotFound_WhenAnimeIsNotFound() throws Exception {
         BDDMockito.when(animeData.getAnimes()).thenReturn(animeList);
+        String response = fileUtils.readResourceFile("anime/delete-anime-by-id-404.json");
 
         Long id = 99L;
 
         mockMvc.perform(MockMvcRequestBuilders.delete(URL+"/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.status().reason("Anime not Found"));
+                .andExpect(MockMvcResultMatchers.content().json(response));
     }
 
     @ParameterizedTest
