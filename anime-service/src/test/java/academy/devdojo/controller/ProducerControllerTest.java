@@ -5,12 +5,16 @@ import academy.devdojo.commons.ProducerUtils;
 import academy.devdojo.domain.Producer;
 import academy.devdojo.repository.ProducerData;
 import academy.devdojo.repository.ProducerHardCodedRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +23,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 @WebMvcTest(controllers = ProducerController.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -200,5 +207,75 @@ class ProducerControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.status().reason("Producer not Found"));
+    }
+
+    @ParameterizedTest
+    @MethodSource("postProducerBadRequestSource")
+    @DisplayName("POST v1/producers creates a producer")
+    @Order(11)
+    void save_ReturnsBadRequest_WhenFieldsAreInvalid(String fileName, List<String> errors) throws Exception {
+        String request = fileUtils.readResourceFile("producer/%s".formatted(fileName));
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                        .post(URL)
+                        .content(request)
+                        .header("x-api-key", "v1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+
+        Exception resolvedException = mvcResult.getResolvedException();
+
+        Assertions.assertThat(resolvedException).isNotNull();
+        Assertions.assertThat(resolvedException.getMessage())
+                .contains(errors);
+    }
+
+    @ParameterizedTest
+    @MethodSource("putProducerBadRequestSource")
+    @DisplayName("PUT v1/producers updates a producer")
+    @Order(12)
+    void update_ReturnsBadRequest_WhenFieldsAreInvalid(String fileName, List<String> errors) throws Exception {
+        String request = fileUtils.readResourceFile("producer/%s".formatted(fileName));
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                        .put(URL)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+
+        Exception resolvedException = mvcResult.getResolvedException();
+
+        Assertions.assertThat(resolvedException).isNotNull();
+        Assertions.assertThat(resolvedException.getMessage())
+                .contains(errors);
+    }
+
+    private static Stream<Arguments> postProducerBadRequestSource(){
+        List<String> allRequiredErrors = allRequiredErrors();
+
+        return Stream.of(
+                Arguments.of("post-request-producer-empty-fields-400.json", allRequiredErrors),
+                Arguments.of("post-request-producer-blank-fields-400.json", allRequiredErrors)
+        );
+    }
+
+    private static Stream<Arguments> putProducerBadRequestSource(){
+        List<String> allRequiredErrors = allRequiredErrors();
+        allRequiredErrors.add("The field 'id' cannot be null");
+
+        return Stream.of(
+                Arguments.of("put-request-producer-empty-fields-400.json", allRequiredErrors),
+                Arguments.of("put-request-producer-blank-fields-400.json", allRequiredErrors)
+        );
+    }
+
+    private static List<String> allRequiredErrors(){
+        String nameRequiredError = "The field 'name' is required";
+
+        return new ArrayList<>(List.of(nameRequiredError));
     }
 }

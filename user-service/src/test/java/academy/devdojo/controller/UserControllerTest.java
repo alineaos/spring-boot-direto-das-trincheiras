@@ -282,6 +282,7 @@ class UserControllerTest {
         String emailInvalidError = "The e-mail is not valid";
         return List.of(emailInvalidError);
     }
+
     private static List<String> allRequiredErrors(){
         String firstNameRequiredError = "The field 'firstName' is required";
         String lastNameRequiredError = "The field 'lastName' is required";

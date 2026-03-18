@@ -8,6 +8,7 @@ import academy.devdojo.request.AnimePutRequest;
 import academy.devdojo.response.AnimeGetResponse;
 import academy.devdojo.response.AnimePostResponse;
 import academy.devdojo.service.AnimeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -54,7 +55,7 @@ public class AnimeController {
     }
 
     @PostMapping
-    public ResponseEntity<AnimePostResponse> save(@RequestBody AnimePostRequest animePostRequest) {
+    public ResponseEntity<AnimePostResponse> save(@RequestBody @Valid AnimePostRequest animePostRequest) {
         log.debug("request to save anime: '{}'", animePostRequest.getName());
 
         Anime anime = mapper.toAnime(animePostRequest);
@@ -74,7 +75,7 @@ public class AnimeController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> update(@RequestBody AnimePutRequest request) {
+    public ResponseEntity<Void> update(@RequestBody @Valid AnimePutRequest request) {
         log.debug("Request to update anime {}", request);
 
         Anime animeToUpdate = mapper.toAnime(request);
