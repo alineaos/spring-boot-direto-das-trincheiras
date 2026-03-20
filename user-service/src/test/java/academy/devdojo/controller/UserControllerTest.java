@@ -5,6 +5,7 @@ import academy.devdojo.commons.UserUtils;
 import academy.devdojo.domain.User;
 import academy.devdojo.repository.UserData;
 import academy.devdojo.repository.UserHardCodedRepository;
+import academy.devdojo.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +31,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -43,6 +43,8 @@ class UserControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private UserData userData;
+    @MockBean
+    private UserRepository userRepository;
     @SpyBean
     private UserHardCodedRepository repository;
     private List<User> userList;
@@ -61,6 +63,7 @@ class UserControllerTest {
     @Order(1)
     void findAll_ReturnsAllUsers_WhenNameIsNull() throws Exception {
         BDDMockito.when(userData.getUsers()).thenReturn(userList);
+        BDDMockito.when(userRepository.findAll()).thenReturn(userList);
 
         String response = fileUtils.readResourceFile("user/get-user-null-first-name-200.json");
 
