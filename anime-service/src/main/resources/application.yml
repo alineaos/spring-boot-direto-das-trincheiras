@@ -1,8 +1,16 @@
 spring:
   #profiles: | Definindo os profiles ativos
-    #active: mysql, mongo
+  #active: mysql, mongo
     application:
       name: anime-service
+    datasource:
+      url: jdbc:mysql://localhost:3306/anime_service?useTimezone=true&serverTimezone=UTC&createDatabaseIfNotExist=true
+      username: ${ENV_ROOT_USER:root}
+      password: ${ENV_ROOT_PASSWORD:devdojo}
+    jpa:
+      show-sql: true
+      hibernate:
+        ddl-auto: update
     # criação de threads virtuais
     threads:
       virtual:
@@ -22,7 +30,3 @@ server:
     threads:
       # máximo de threads de plataformas que o tomcat pode utilizar
       max: 20
-database:
-  url: ${DB_URL:localhost}:${DB_PORT:3306}
-  username: ${LOCAL_USERNAME:root}
-  password: ${LOCAL_PASSWORD:root}
