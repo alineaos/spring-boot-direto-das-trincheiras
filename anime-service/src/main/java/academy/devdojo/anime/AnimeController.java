@@ -5,6 +5,8 @@ import academy.devdojo.domain.Anime;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,6 +38,16 @@ public class AnimeController {
 
 
         return ResponseEntity.ok(animeGetResponses);
+    }
+
+    @GetMapping("/paginated")
+    public ResponseEntity<Page<AnimeGetResponse>> findAllPaginated(Pageable pageable) {
+        log.debug("Request received to list all animes paginated");
+
+        Page<AnimeGetResponse> pageAnimeGetResponse = service.findAllPaginated(pageable).map(mapper::toAnimeGetResponse);
+
+
+        return ResponseEntity.ok(pageAnimeGetResponse);
     }
 
     @GetMapping("{id}")
