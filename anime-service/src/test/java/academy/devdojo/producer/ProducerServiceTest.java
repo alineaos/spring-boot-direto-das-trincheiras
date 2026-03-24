@@ -101,7 +101,7 @@ class ProducerServiceTest {
 
         Producer savedProducer = service.save(producerToSave);
 
-        Assertions.assertThat(savedProducer).isEqualTo(producerToSave);
+        Assertions.assertThat(savedProducer).isEqualTo(producerToSave).hasNoNullFieldsOrProperties();
     }
 
     @Test

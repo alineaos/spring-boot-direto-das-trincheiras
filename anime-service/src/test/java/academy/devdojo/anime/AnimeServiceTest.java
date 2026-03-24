@@ -102,7 +102,7 @@ class AnimeServiceTest {
 
         Anime savedAnime = service.save(animeToSave);
 
-        Assertions.assertThat(savedAnime).isEqualTo(animeToSave);
+        Assertions.assertThat(savedAnime).isEqualTo(animeToSave).hasNoNullFieldsOrProperties();
     }
 
     @Test
