@@ -5,7 +5,10 @@ import academy.devdojo.exception.EmailAlreadyExistsException;
 import academy.devdojo.exception.NotFoundException;
 import academy.devdojo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -23,9 +26,14 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException("User not Found"));
     }
 
+    @Transactional
     public User save(User user){
         assertEmailDoesNotExist(user.getEmail());
-        return repository.save(user);
+        User userSaved = repository.save(user);
+        if (true){
+        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
+        }
+        return userSaved;
     }
 
     public void delete(Long id){
