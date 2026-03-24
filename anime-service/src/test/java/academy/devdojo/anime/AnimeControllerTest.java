@@ -19,6 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -67,9 +70,25 @@ class AnimeControllerTest {
     }
 
     @Test
+    @DisplayName("GET v1/animes/paginated returns a list of animes")
+    @Order(1)
+    void findAll_ReturnsPaginatedAnimes_WhenSuccesful() throws Exception {
+        String response = fileUtils.readResourceFile("anime/get-anime-paginated-200.json");
+        PageRequest pageRequest = PageRequest.of(0, animeList.size());
+        PageImpl<Anime> pageAnime = new PageImpl<>(animeList, pageRequest, 1);
+
+        BDDMockito.when(repository.findAll(BDDMockito.any(Pageable.class))).thenReturn(pageAnime);
+
+        mockMvc.perform(MockMvcRequestBuilders.get(URL + "/paginated"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(response));
+    }
+
+    @Test
     @DisplayName("GET v1/animes?name=Banana Fish returns list with found object when name exists")
     @Order(2)
-    void findAll_ReturnsFoundAnimeInList_WhenNameIsFound() throws Exception {
+    void findAllPaginated_ReturnsFoundAnimeInList_WhenNameIsFound() throws Exception {
         String response = fileUtils.readResourceFile("anime/get-anime-banana-fish-name-200.json");
         String name = "Banana Fish";
         Anime bananaFish = animeList.stream().filter(a -> a.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
