@@ -44,7 +44,7 @@ public class UserController {
 
     @GetMapping("{id}")
     public ResponseEntity<UserGetResponse> findById(@PathVariable Long id){
-        log.debug("Request to find anime by id: {}", id);
+        log.debug("Request to find profile by id: {}", id);
 
         User user = service.findByIdOrThrowNotFound(id);
         UserGetResponse userGetResponse = mapper.toUserGetResponse(user);

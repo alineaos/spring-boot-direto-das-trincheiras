@@ -148,7 +148,7 @@ class AnimeControllerTest {
     @Order(6)
     void save_CreatesAnime_WhenSuccessful() throws Exception {
         String request = fileUtils.readResourceFile("anime/post-request-anime-200.json");
-        String response = fileUtils.readResourceFile("anime/post-response-anime-200.json");
+        String response = fileUtils.readResourceFile("anime/post-response-anime-201.json");
         Anime animeToSave = animeUtils.newAnimeToSave();
 
         BDDMockito.when(repository.save(ArgumentMatchers.any())).thenReturn(animeToSave);

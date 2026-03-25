@@ -132,7 +132,7 @@ class UserControllerTest {
     @Order(6)
     void save_CreatesUser_WhenSuccessful() throws Exception {
         String request = fileUtils.readResourceFile("user/post-request-user-200.json");
-        String response = fileUtils.readResourceFile("user/post-response-user-200.json");
+        String response = fileUtils.readResourceFile("user/post-response-user-201.json");
         User userToSave = userUtils.newUserToSave();
 
         BDDMockito.when(repository.save(ArgumentMatchers.any())).thenReturn(userToSave);

@@ -131,7 +131,7 @@ class ProducerControllerTest {
     @Order(6)
     void save_CreatesProducer_WhenSuccessful() throws Exception {
         String request = fileUtils.readResourceFile("producer/post-request-producer-200.json");
-        String response = fileUtils.readResourceFile("producer/post-response-producer-200.json");
+        String response = fileUtils.readResourceFile("producer/post-response-producer-201.json");
         Producer producerToSave = producerUtils.newProducerToSave();
 
         BDDMockito.when(repository.save(ArgumentMatchers.any())).thenReturn(producerToSave);

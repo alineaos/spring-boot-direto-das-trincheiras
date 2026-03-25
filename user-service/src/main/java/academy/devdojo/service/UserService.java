@@ -26,13 +26,10 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException("User not Found"));
     }
 
-    @Transactional
+    //@Transactional
     public User save(User user){
         assertEmailDoesNotExist(user.getEmail());
         User userSaved = repository.save(user);
-        if (true){
-        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
-        }
         return userSaved;
     }
 
