@@ -139,9 +139,9 @@ class UserControllerTest {
     void save_CreatesUser_WhenSuccessful() throws Exception {
         String request = fileUtils.readResourceFile("user/post-request-user-200.json");
         String response = fileUtils.readResourceFile("user/post-response-user-201.json");
-        User userToSave = userUtils.newUserToSave();
+        User userSaved = userUtils.newUserSaved();
 
-        BDDMockito.when(repository.save(ArgumentMatchers.any())).thenReturn(userToSave);
+        BDDMockito.when(repository.save(ArgumentMatchers.any())).thenReturn(userSaved);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post(URL)

@@ -52,7 +52,7 @@ class UserServiceTest {
     @Test
     @DisplayName("findAll returns list with found objects when argument exists")
     @Order(2)
-    void findByName_ReturnsFoundAnimeInList_WhenNameIsFound() {
+    void findByName_ReturnsFoundUserInList_WhenNameIsFound() {
         User user = userList.getFirst();
         List<User> expectedUsersFound = Collections.singletonList(user);
         BDDMockito.when(repository.findByFirstNameIgnoreCase(user.getFirstName())).thenReturn(userList);
@@ -99,14 +99,14 @@ class UserServiceTest {
     @DisplayName("save creates a user")
     @Order(6)
     void save_CreatesUser_WhenSuccessful() {
-        User userToSave = userUtils.newUserToSave();
+        User userSaved = userUtils.newUserSaved();
 
-        BDDMockito.when(repository.save(userToSave)).thenReturn(userToSave);
-        BDDMockito.when(repository.findByEmail(userToSave.getEmail())).thenReturn(Optional.empty());
+        BDDMockito.when(repository.save(userSaved)).thenReturn(userSaved);
+        BDDMockito.when(repository.findByEmail(userSaved.getEmail())).thenReturn(Optional.empty());
 
-        User savedUser = service.save(userToSave);
+        User savedUser = service.save(userSaved);
 
-        Assertions.assertThat(savedUser).isEqualTo(userToSave).hasNoNullFieldsOrProperties();
+        Assertions.assertThat(savedUser).isEqualTo(userSaved).hasNoNullFieldsOrProperties();
     }
 
     @Test

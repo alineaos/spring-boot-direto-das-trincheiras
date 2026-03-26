@@ -49,7 +49,7 @@ public class ProfileServiceTest {
 
     @Test
     @DisplayName("save creates a profile")
-    @Order(6)
+    @Order(2)
     void save_CreatesProfile_WhenSuccessful() {
         Profile profileToSave = profileUtils.newProfileToSave();
         Profile profileSaved = profileUtils.newProfileSaved();
