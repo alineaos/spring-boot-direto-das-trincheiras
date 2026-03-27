@@ -3,6 +3,7 @@ package academy.devdojo.controller;
 import academy.devdojo.commons.FileUtils;
 import academy.devdojo.commons.ProfileUtils;
 import academy.devdojo.config.IntegrationTestConfig;
+import academy.devdojo.repository.ProfileRepository;
 import academy.devdojo.response.ProfileGetResponse;
 import academy.devdojo.response.ProfilePostResponse;
 import net.javacrumbs.jsonunit.assertj.JsonAssertions;
@@ -26,7 +27,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
@@ -34,7 +34,6 @@ import java.util.stream.Stream;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Transactional
 class ProfileControllerIT extends IntegrationTestConfig {
     private static final String URL = "/v1/profiles";
     @Autowired
@@ -47,7 +46,8 @@ class ProfileControllerIT extends IntegrationTestConfig {
 
     @Test
     @DisplayName("GET v1/profiles returns a list with all profiles")
-    @Sql("/sql/init_two_profiles.sql")
+    @Sql(value = "/sql/init_two_profiles.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = "/sql/clean_profiles.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Order(1)
     void findAll_ReturnsAllProfiles_WhenNameIsNull() {
         ParameterizedTypeReference<List<ProfileGetResponse>> typeReference = new ParameterizedTypeReference<>() {};
@@ -55,7 +55,7 @@ class ProfileControllerIT extends IntegrationTestConfig {
         ResponseEntity<List<ProfileGetResponse>> responseEntity = testRestTemplate.exchange(URL, HttpMethod.GET, null, typeReference);
         Assertions.assertThat(responseEntity).isNotNull();
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Assertions.assertThat(responseEntity.getBody()).isNotNull().doesNotContainNull();
+        Assertions.assertThat(responseEntity.getBody()).isNotEmpty().doesNotContainNull();
 
         responseEntity.getBody()
                 .forEach(profileGetResponse -> Assertions.assertThat(profileGetResponse)
