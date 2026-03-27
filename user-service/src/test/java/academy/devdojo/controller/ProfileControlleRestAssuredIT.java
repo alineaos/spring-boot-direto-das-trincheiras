@@ -1,0 +1,154 @@
+package academy.devdojo.controller;
+
+import academy.devdojo.commons.FileUtils;
+import academy.devdojo.commons.ProfileUtils;
+import academy.devdojo.config.IntegrationTestConfig;
+import academy.devdojo.response.ProfileGetResponse;
+import academy.devdojo.response.ProfilePostResponse;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import net.javacrumbs.jsonunit.assertj.JsonAssertions;
+import net.javacrumbs.jsonunit.core.Option;
+import org.assertj.core.api.Assertions;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.internal.matchers.Matches;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Stream;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+class ProfileControlleRestAssuredIT extends IntegrationTestConfig {
+    private static final String URL = "/v1/profiles";
+    @Autowired
+    private ProfileUtils profileUtils;
+    @Autowired
+    private FileUtils fileUtils;
+    @LocalServerPort
+    private int port;
+
+    @BeforeEach
+    void setUrl() {
+        RestAssured.baseURI = "http://localhost";
+        RestAssured.port = port;
+    }
+
+    @Test
+    @DisplayName("GET v1/profiles returns a list with all profiles")
+    @Sql(value = "/sql/init_two_profiles.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = "/sql/clean_profiles.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Order(1)
+    void findAll_ReturnsAllProfiles_WhenNameIsNull() throws IOException {
+        String response = fileUtils.readResourceFile("profile/get-profiles-200.json");
+
+        RestAssured.given()
+                .contentType(ContentType.JSON).accept(ContentType.JSON)
+                .when()
+                .get(URL)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body(Matchers.equalTo(response))
+                .log().all();
+    }
+
+    @Test
+    @DisplayName("GET v1/profiles returns empty list when nothing is found")
+    @Order(2)
+    void findAll_ReturnsEmptyList_WhenNothingIsFound() throws IOException {
+        String response = fileUtils.readResourceFile("profile/get-profiles-empty-list-200.json");
+
+        RestAssured.given()
+                .contentType(ContentType.JSON).accept(ContentType.JSON)
+                .when()
+                .get(URL)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body(Matchers.equalTo(response))
+                .log().all();
+    }
+
+    @Test
+    @DisplayName("POST v1/profiles creates a profile")
+    @Order(3)
+    void save_CreatesProfile_WhenSuccessful() throws IOException {
+        String request = fileUtils.readResourceFile("profile/post-request-profile-200.json");
+        String expectedResponse = fileUtils.readResourceFile("profile/post-response-profile-201.json");
+
+        String response = RestAssured.given()
+                .contentType(ContentType.JSON).accept(ContentType.JSON)
+                .body(request)
+                .when()
+                .post(URL)
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .log().all()
+                .extract().response().body().asString();
+
+        JsonAssertions.assertThatJson(response)
+                .node("id")
+                .asNumber()
+                .isPositive();
+
+        JsonAssertions.assertThatJson(response)
+                .whenIgnoringPaths("id")
+                .isEqualTo(expectedResponse);
+    }
+
+    @ParameterizedTest
+    @MethodSource("postProfileBadRequestSource")
+    @DisplayName("POST v1/profiles returns bad request when fields are invalid")
+    @Order(4)
+    void save_ReturnsBadRequest_WhenFieldsAreInvalid(String requestFile, String responseFile) throws Exception {
+        String request = fileUtils.readResourceFile("profile/%s".formatted(requestFile));
+        String expectedResponse = fileUtils.readResourceFile("profile/%s".formatted(responseFile));
+
+
+        String response = RestAssured.given()
+                .contentType(ContentType.JSON).accept(ContentType.JSON)
+                .body(request)
+                .when()
+                .post(URL)
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .log().all()
+                .extract().response().body().asString();
+
+        JsonAssertions.assertThatJson(response)
+                .whenIgnoringPaths("timestamp")
+                .when(Option.IGNORING_ARRAY_ORDER)
+                .isEqualTo(expectedResponse);
+    }
+
+    private static Stream<Arguments> postProfileBadRequestSource() {
+       return Stream.of(
+                Arguments.of("post-request-profile-empty-fields-400.json", "post-response-profile-empty-fields-400.json"),
+                Arguments.of("post-request-profile-blank-fields-400.json", "post-response-profile-blank-fields-400.json")
+        );
+    }
+
+}
