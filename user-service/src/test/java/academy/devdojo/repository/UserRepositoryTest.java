@@ -1,7 +1,7 @@
 package academy.devdojo.repository;
 
 import academy.devdojo.commons.UserUtils;
-import academy.devdojo.config.TestcontainersConfiguration;
+import academy.devdojo.config.IntegrationTestConfig;
 import academy.devdojo.domain.User;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -21,9 +21,9 @@ import java.util.List;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 //Configura um database de testes a ser utilizado.
 //@Transactional(propagation = Propagation.NOT_SUPPORTED) //O que foi realizado no teste anterior, será reaproveitado no próximo teste. Não recomendado.
-@Import({UserUtils.class, TestcontainersConfiguration.class})
+@Import(UserUtils.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class UserRepositoryTest {
+public class UserRepositoryTest  extends IntegrationTestConfig {
     @Autowired
     private UserRepository repository;
     @Autowired
