@@ -1,6 +1,7 @@
 package academy.devdojo.repository;
 
 import academy.devdojo.commons.UserUtils;
+import academy.devdojo.config.TestcontainersConfiguration;
 import academy.devdojo.domain.User;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +21,7 @@ import java.util.List;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 //Configura um database de testes a ser utilizado.
 //@Transactional(propagation = Propagation.NOT_SUPPORTED) //O que foi realizado no teste anterior, será reaproveitado no próximo teste. Não recomendado.
-@Import(UserUtils.class)
+@Import({UserUtils.class, TestcontainersConfiguration.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class UserRepositoryTest {
     @Autowired
@@ -38,7 +39,7 @@ public class UserRepositoryTest {
         User savedUser = repository.save(userToSave);
 
         Assertions.assertThat(savedUser).hasNoNullFieldsOrProperties();
-        Assertions.assertThat(savedUser.getId()).isEqualTo(1L);
+        Assertions.assertThat(savedUser.getId()).isNotNull().isPositive();
     }
 
     @Test
