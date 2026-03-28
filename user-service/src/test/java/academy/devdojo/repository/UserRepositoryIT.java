@@ -23,7 +23,7 @@ import java.util.List;
 //@Transactional(propagation = Propagation.NOT_SUPPORTED) //O que foi realizado no teste anterior, será reaproveitado no próximo teste. Não recomendado.
 @Import(UserUtils.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class UserRepositoryTest  extends IntegrationTestConfig {
+public class UserRepositoryIT extends IntegrationTestConfig {
     @Autowired
     private UserRepository repository;
     @Autowired

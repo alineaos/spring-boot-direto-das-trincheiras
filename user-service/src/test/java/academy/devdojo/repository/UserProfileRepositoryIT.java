@@ -18,7 +18,7 @@ import java.util.List;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class UserProfileRepositoryTest  extends IntegrationTestConfig {
+public class UserProfileRepositoryIT extends IntegrationTestConfig {
     @Autowired
     private UserProfileRepository repository;
 
