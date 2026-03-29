@@ -3,6 +3,7 @@ package academy.devdojo.controller;
 import academy.devdojo.commons.FileUtils;
 import academy.devdojo.commons.ProfileUtils;
 import academy.devdojo.config.IntegrationTestConfig;
+import academy.devdojo.config.TestRestTemplateConfig;
 import academy.devdojo.response.ProfileGetResponse;
 import academy.devdojo.response.ProfilePostResponse;
 import net.javacrumbs.jsonunit.assertj.JsonAssertions;
@@ -32,7 +33,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Stream;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = TestRestTemplateConfig.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ProfileControllerIT extends IntegrationTestConfig {
     private static final String URL = "/v1/profiles";

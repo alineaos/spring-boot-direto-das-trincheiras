@@ -1,3 +1,3 @@
-insert into user (id, email, first_name, last_name) values (1, 'yuuji.itadori@gmail.com','Yuuji','Itadori')
-insert into user (id, email, first_name, last_name) values (2, 'izuku.midoriya@gmail.com','Izuku','Midoriya')
-insert into user (id, email, first_name, last_name) values (3, 'tanjirou.kamado@gmail.com','Tanjirou','Kamado')
+insert into user (id, email, first_name, last_name, roles, password) values (1, 'yuuji.itadori@gmail.com','Yuuji','Itadori', 'USER', '{bcrypt}$2a$10$iH/HtJTJWkT0hvoW4Zmy7eArfljCXKauBoek0dxmdkybM926ZF4Ie')
+insert into user (id, email, first_name, last_name, roles, password) values (2, 'izuku.midoriya@gmail.com','Izuku','Midoriya', 'USER', '{bcrypt}$2a$10$iH/HtJTJWkT0hvoW4Zmy7eArfljCXKauBoek0dxmdkybM926ZF4Ie')
+insert into user (id, email, first_name, last_name, roles, password) values (3, 'tanjirou.kamado@gmail.com','Tanjirou','Kamado', 'USER', '{bcrypt}$2a$10$iH/HtJTJWkT0hvoW4Zmy7eArfljCXKauBoek0dxmdkybM926ZF4Ie')

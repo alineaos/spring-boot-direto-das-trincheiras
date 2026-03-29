@@ -3,6 +3,7 @@ package academy.devdojo.service;
 import academy.devdojo.commons.UserUtils;
 import academy.devdojo.domain.User;
 import academy.devdojo.exception.EmailAlreadyExistsException;
+import academy.devdojo.mapper.UserMapper;
 import academy.devdojo.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +34,8 @@ class UserServiceTest {
     private List<User> userList;
     @InjectMocks
     private UserUtils userUtils;
+    @Mock
+    private UserMapper mapper;
 
     @BeforeEach
     void init() {
@@ -144,6 +147,7 @@ class UserServiceTest {
         BDDMockito.when(repository.findById(userToUpdate.getId())).thenReturn(Optional.of(userToUpdate));
         BDDMockito.when(repository.findByEmailAndIdNot(email, id)).thenReturn(Optional.empty());
         BDDMockito.when(repository.save(userToUpdate)).thenReturn(userToUpdate);
+        BDDMockito.when(mapper.toUserWithPasswordAndRoles(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(userToUpdate);
 
         Assertions.assertThatNoException().isThrownBy(() -> service.update(userToUpdate));
     }

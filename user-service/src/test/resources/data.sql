@@ -1,0 +1,1 @@
+insert into user (email, first_name, last_name, roles, password) values ('luffy@strawhat','Luffy','Monkey D.', 'USER', '{bcrypt}$2a$10$iH/HtJTJWkT0hvoW4Zmy7eArfljCXKauBoek0dxmdkybM926ZF4Ie')

@@ -40,8 +40,8 @@ public class UserService {
     }
 
     public void update(User userToUpdate) {
-        assertEmailDoesNotExist(userToUpdate.getEmail(), userToUpdate.getId());
         User savedUser = findByIdOrThrowNotFound(userToUpdate.getId());
+        assertEmailDoesNotExist(userToUpdate.getEmail(), userToUpdate.getId());
         User userWithPasswordAndRoles = mapper.toUserWithPasswordAndRoles(userToUpdate, userToUpdate.getPassword(), savedUser);
 //        userToUpdate.setRoles(savedUser.getRoles());
 //        if(userToUpdate.getPassword() == null){
