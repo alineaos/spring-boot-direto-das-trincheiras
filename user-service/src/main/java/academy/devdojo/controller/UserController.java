@@ -57,7 +57,7 @@ public class UserController {
             array = @ArraySchema(schema = @Schema(implementation = UserGetResponse.class)))
              )
     })
-    //@PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<UserGetResponse>> findAll(@RequestParam(required = false) String firstName){
         log.debug("Request received to list all user, param name '{}'", firstName);
 
