@@ -1,13 +1,19 @@
 package academy.devdojo.anime;
 
 import academy.devdojo.domain.Anime;
+import academy.devdojo.dto.AnimeGetResponse;
+import academy.devdojo.dto.AnimePostRequest;
+import academy.devdojo.dto.AnimePostResponse;
+import academy.devdojo.dto.AnimePutRequest;
+import academy.devdojo.dto.PageAnimeGetResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
-public interface AnimeMapper {
+public interface AnimeMapper  {
     Anime toAnime(AnimePostRequest postRequest);
 
     Anime toAnime(AnimePutRequest putRequest);
@@ -17,4 +23,6 @@ public interface AnimeMapper {
     AnimeGetResponse toAnimeGetResponse(Anime anime);
 
     List<AnimeGetResponse> toAnimeGetResponseList(List<Anime> animes);
+
+    PageAnimeGetResponse toPageAnimeGetResponse(Page<Anime> jpaPageAnimeGetResponse);
 }

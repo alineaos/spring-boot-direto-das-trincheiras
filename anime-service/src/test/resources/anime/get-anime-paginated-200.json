@@ -1,4 +1,15 @@
 {
+  "totalElements": 5,
+  "totalPages": 1,
+  "pageable": {
+    "paged": true,
+    "unpaged": false,
+    "pageSize": 5,
+    "pageNumber": 0,
+    "offset": 0,
+    "sort": []
+  },
+  "size": 5,
   "content": [
     {
       "id": 1,
@@ -21,29 +32,10 @@
       "name": "To be Hero X"
     }
   ],
-  "pageable": {
-    "pageNumber": 0,
-    "pageSize": 5,
-    "sort": {
-      "empty": true,
-      "sorted": false,
-      "unsorted": true
-    },
-    "offset": 0,
-    "paged": true,
-    "unpaged": false
-  },
-  "last": true,
-  "totalElements": 5,
-  "totalPages": 1,
-  "first": true,
-  "size": 5,
   "number": 0,
-  "sort": {
-    "empty": true,
-    "sorted": false,
-    "unsorted": true
-  },
+  "sort": [],
+  "first": true,
+  "last": true,
   "numberOfElements": 5,
   "empty": false
 }
