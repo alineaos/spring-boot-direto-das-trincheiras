@@ -6,9 +6,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 @Builder
 @Getter
+@ToString
 public class UserPutRequest {
     @NotNull(message = "The field 'id' cannot be null")
     @Schema(description = "User's id.", example = "1")

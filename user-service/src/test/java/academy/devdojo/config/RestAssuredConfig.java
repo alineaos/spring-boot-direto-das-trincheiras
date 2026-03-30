@@ -7,9 +7,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 
-import static academy.devdojo.commons.Constants.BASE_URI;
-import static academy.devdojo.commons.Constants.REGULAR_USERNAME;
-import static academy.devdojo.commons.Constants.PASSWORD;
+import static academy.devdojo.commons.Constants.*;
 
 @TestConfiguration
 @Lazy
@@ -21,6 +19,13 @@ public class RestAssuredConfig {
     public RequestSpecification requestSpecificationRegularUser(){
         return RestAssured.given()
                 .baseUri(BASE_URI + port)
-                .auth().preemptive().basic(REGULAR_USERNAME, PASSWORD);
+                .auth().basic(REGULAR_USERNAME, PASSWORD);
+    }
+
+    @Bean(name = "requestSpecificationAdminUser")
+    public RequestSpecification requestSpecificationAdminUser(){
+        return RestAssured.given()
+                .baseUri(BASE_URI + port)
+                .auth().basic(ADMIN_USERNAME, PASSWORD);
     }
 }

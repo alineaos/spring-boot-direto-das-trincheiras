@@ -41,9 +41,6 @@ class ProfileControlleRestAssuredIT extends IntegrationTestConfig {
     private ProfileUtils profileUtils;
     @Autowired
     private FileUtils fileUtils;
-    @LocalServerPort
-    private int port;
-
     @Autowired
     @Qualifier("requestSpecificationRegularUser")
     private RequestSpecification requestSpecificationRegularUser;
