@@ -30,3 +30,10 @@ server:
     threads:
       # máximo de threads de plataformas que o tomcat pode utilizar
       max: 20
+management:
+  server:
+    port: 8989
+  endpoints:
+    web:
+      exposure:
+        include: "*"
