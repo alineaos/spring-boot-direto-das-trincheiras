@@ -1,4 +1,5 @@
 x-database-variables: &database-variables
+  ## a URL é exclusivo do serviço, se houver mais serviços é importante colocar uma url diretamente no enviroment da imagem
   SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/anime_service?useTimezone=true&serverTimezone=UTC&createDatabaseIfNotExist=true
   ENV_ROOT_USER: root
   ENV_ROOT_PASSWORD: devdojo
