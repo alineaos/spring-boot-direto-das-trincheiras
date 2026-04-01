@@ -23,15 +23,16 @@ import lombok.With;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@NamedEntityGraph(name= "UserProfile.fullDetails",
-attributeNodes = {@NamedAttributeNode("user"), @NamedAttributeNode("profile")})
+@NamedEntityGraph(name = "UserProfile.fullDetails",
+    attributeNodes = {@NamedAttributeNode("user"), @NamedAttributeNode("profile")})
 public class UserProfile {
-    @EqualsAndHashCode.Include
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @ManyToOne(optional = false)
-    private User user;
-    @ManyToOne(optional = false)
-    private Profile profile;
+
+  @EqualsAndHashCode.Include
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+  @ManyToOne(optional = false)
+  private User user;
+  @ManyToOne(optional = false)
+  private Profile profile;
 }

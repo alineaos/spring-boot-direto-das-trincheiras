@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProfilePostResponse {
-    private Long id;
+
+  private Long id;
 }

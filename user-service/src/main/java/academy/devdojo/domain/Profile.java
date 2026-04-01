@@ -22,12 +22,13 @@ import lombok.With;
 @NoArgsConstructor
 @Entity
 public class Profile {
-    @EqualsAndHashCode.Include
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(nullable = false)
-    private String name;
-    @Column(nullable = false)
-    private String description;
+
+  @EqualsAndHashCode.Include
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+  @Column(nullable = false)
+  private String name;
+  @Column(nullable = false)
+  private String description;
 }

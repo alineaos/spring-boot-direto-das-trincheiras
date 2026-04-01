@@ -7,8 +7,9 @@ import lombok.Getter;
 @Builder
 @Getter
 public class ProfilePostRequest {
-    @NotBlank(message = "The field 'name' is required")
-    private String name;
-    @NotBlank(message = "The field 'description' is required")
-    private String description;
+
+  @NotBlank(message = "The field 'name' is required")
+  private String name;
+  @NotBlank(message = "The field 'description' is required")
+  private String description;
 }

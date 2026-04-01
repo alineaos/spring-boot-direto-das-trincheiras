@@ -7,17 +7,14 @@ import academy.devdojo.response.UserProfileGetResponse;
 import academy.devdojo.response.UserProfileUserGetResponse;
 import academy.devdojo.service.UserProfileService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("v1/user-profiles")
@@ -25,26 +22,27 @@ import java.util.List;
 @RequiredArgsConstructor
 @SecurityRequirement(name = "basicAuth")
 public class UserProfileController {
-    private final UserProfileService service;
-    private final UserProfileMapper mapper;
 
-    @GetMapping
-    public ResponseEntity<List<UserProfileGetResponse>> findAll() {
-        log.debug("Request received to list all user profiles");
+  private final UserProfileService service;
+  private final UserProfileMapper mapper;
 
-        List<UserProfile> usersProfiles = service.findAll();
-        List<UserProfileGetResponse> userProfileGetResponses = mapper.toUserProfileGetResponseList(usersProfiles);
+  @GetMapping
+  public ResponseEntity<List<UserProfileGetResponse>> findAll() {
+    log.debug("Request received to list all user profiles");
 
-        return ResponseEntity.ok(userProfileGetResponses);
-    }
+    List<UserProfile> usersProfiles = service.findAll();
+    List<UserProfileGetResponse> userProfileGetResponses = mapper.toUserProfileGetResponseList(usersProfiles);
 
-    @GetMapping("profiles/{id}/users")
-    public ResponseEntity<List<UserProfileUserGetResponse>> findAll(@PathVariable Long id){
-        log.debug("Request to received to list all users by profile id: {}", id);
+    return ResponseEntity.ok(userProfileGetResponses);
+  }
 
-        List<User> users = service.findAllUserByProfileId(id);
-        List<UserProfileUserGetResponse> userProfileUserGetResponses = mapper.toUserProfileUserGetResponseList(users);
+  @GetMapping("profiles/{id}/users")
+  public ResponseEntity<List<UserProfileUserGetResponse>> findAll(@PathVariable Long id) {
+    log.debug("Request to received to list all users by profile id: {}", id);
 
-        return ResponseEntity.ok(userProfileUserGetResponses);
-    }
+    List<User> users = service.findAllUserByProfileId(id);
+    List<UserProfileUserGetResponse> userProfileUserGetResponses = mapper.toUserProfileUserGetResponseList(users);
+
+    return ResponseEntity.ok(userProfileUserGetResponses);
+  }
 }
