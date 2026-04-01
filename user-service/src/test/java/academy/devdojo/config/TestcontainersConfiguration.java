@@ -16,6 +16,7 @@ public class TestcontainersConfiguration {
     @ServiceConnection
     @RestartScope //"Não reinicie o container. Mantenha um para todos os testes"
     MySQLContainer<?> mysqlContainer() {
-        return new MySQLContainer<>(DockerImageName.parse("mysql:9.0.1"));
+        return new MySQLContainer<>(DockerImageName.parse("mysql:9.0.1"))
+            .withDatabaseName("user_service");
     }
 }

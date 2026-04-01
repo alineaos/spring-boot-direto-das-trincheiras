@@ -1,8 +1,8 @@
 spring:
-#  security:
-#    user:
-#      name: user
-#      password: devdojo
+  #  security:
+  #    user:
+  #      name: user
+  #      password: devdojo
   config:
     import: optional:classpath:.env[.properties]
   application:
@@ -14,10 +14,12 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
   threads:
     virtual:
       enabled: true
+  flyway:
+    enabled: true
 logging:
   level:
     academy.devdojo: debug
