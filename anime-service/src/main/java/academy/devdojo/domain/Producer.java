@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -16,8 +17,6 @@ import lombok.With;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SourceType;
 
-import java.time.LocalDateTime;
-
 @With
 @Builder
 @Getter
@@ -27,14 +26,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Producer {
-    @EqualsAndHashCode.Include
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @JsonProperty("name") // Se o nome na api estiver diferente do que no sistema, essa anotação faz uma "conversão". Mais detalhes Notion
-    @Column(nullable = false)
-    private String name;
-    @Column(nullable = false, insertable = false, updatable = false)
-    @CreationTimestamp(source = SourceType.DB)
-    private LocalDateTime createdAt;
+
+  @EqualsAndHashCode.Include
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+  @JsonProperty("name") // Se o nome na api estiver diferente do que no sistema, essa anotação faz uma "conversão". Mais detalhes Notion
+  @Column(nullable = false)
+  private String name;
+  @Column(nullable = false, insertable = false, updatable = false)
+  @CreationTimestamp(source = SourceType.DB)
+  private LocalDateTime createdAt;
 }

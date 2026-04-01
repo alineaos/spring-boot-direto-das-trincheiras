@@ -9,6 +9,7 @@ import academy.devdojo.dto.ProducerPostResponse;
 import academy.devdojo.dto.ProducerPutRequest;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,64 +25,63 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("v1/producers")
 @Slf4j
 @RequiredArgsConstructor
 @SecurityRequirement(name = "basicAuth")
 public class ProducerController implements ProducerControllerApi {
-    private final ProducerMapper mapper;
-    private final ProducerService service;
 
-    @GetMapping()
-    public ResponseEntity<List<ProducerGetResponse>> listAllProducers(@RequestParam(required = false) String name) {
-        log.debug("Request received to list all producers, param name '{}'", name);
+  private final ProducerMapper mapper;
+  private final ProducerService service;
 
-        List<Producer> producers = service.findAll(name);
-        List<ProducerGetResponse> producerGetResponses = mapper.toProducerGetResponseList(producers);
+  @GetMapping()
+  public ResponseEntity<List<ProducerGetResponse>> listAllProducers(@RequestParam(required = false) String name) {
+    log.debug("Request received to list all producers, param name '{}'", name);
 
-        return ResponseEntity.ok(producerGetResponses);
+    List<Producer> producers = service.findAll(name);
+    List<ProducerGetResponse> producerGetResponses = mapper.toProducerGetResponseList(producers);
 
-    }
+    return ResponseEntity.ok(producerGetResponses);
 
-    @GetMapping("{id}")
-    public ResponseEntity<ProducerGetResponse> findProducerById(@PathVariable Long id) {
-        log.debug("Request to find producer by id: '{}'", id);
+  }
 
-        Producer producer = service.findByIdOrThrowNotFound(id);
-        ProducerGetResponse producerGetResponse = mapper.toProducerGetResponse(producer);
+  @GetMapping("{id}")
+  public ResponseEntity<ProducerGetResponse> findProducerById(@PathVariable Long id) {
+    log.debug("Request to find producer by id: '{}'", id);
 
-        return ResponseEntity.ok(producerGetResponse);
-    }
+    Producer producer = service.findByIdOrThrowNotFound(id);
+    ProducerGetResponse producerGetResponse = mapper.toProducerGetResponse(producer);
 
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "x-api-key")
-    public ResponseEntity<ProducerPostResponse> saveProducer(@RequestBody @Valid ProducerPostRequest producerPostRequest) {
-        Producer producer = mapper.toProducer(producerPostRequest);
-        Producer producerSaved = service.save(producer);
-        ProducerPostResponse producerPostResponse = mapper.toProducerPostResponse(producerSaved);
+    return ResponseEntity.ok(producerGetResponse);
+  }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(producerPostResponse);
-    }
+  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "x-api-key")
+  public ResponseEntity<ProducerPostResponse> saveProducer(@RequestBody @Valid ProducerPostRequest producerPostRequest) {
+    Producer producer = mapper.toProducer(producerPostRequest);
+    Producer producerSaved = service.save(producer);
+    ProducerPostResponse producerPostResponse = mapper.toProducerPostResponse(producerSaved);
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteProducer(@PathVariable Long id) {
-        log.debug("Request to delete producer by id: {}", id);
+    return ResponseEntity.status(HttpStatus.CREATED).body(producerPostResponse);
+  }
 
-        service.delete(id);
+  @DeleteMapping("{id}")
+  public ResponseEntity<Void> deleteProducer(@PathVariable Long id) {
+    log.debug("Request to delete producer by id: {}", id);
 
-        return ResponseEntity.noContent().build();
-    }
+    service.delete(id);
 
-    @PutMapping
-    public ResponseEntity<Void> updateProducer(@RequestBody @Valid ProducerPutRequest request) {
-        log.debug("Request to update producer {}", request);
+    return ResponseEntity.noContent().build();
+  }
 
-        Producer producerToUpdate = mapper.toProducer(request);
-        service.update(producerToUpdate);
+  @PutMapping
+  public ResponseEntity<Void> updateProducer(@RequestBody @Valid ProducerPutRequest request) {
+    log.debug("Request to update producer {}", request);
 
-        return ResponseEntity.noContent().build();
-    }
+    Producer producerToUpdate = mapper.toProducer(request);
+    service.update(producerToUpdate);
+
+    return ResponseEntity.noContent().build();
+  }
 
 }

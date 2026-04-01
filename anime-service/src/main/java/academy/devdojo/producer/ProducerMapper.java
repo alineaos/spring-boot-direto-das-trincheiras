@@ -5,21 +5,21 @@ import academy.devdojo.dto.ProducerGetResponse;
 import academy.devdojo.dto.ProducerPostRequest;
 import academy.devdojo.dto.ProducerPostResponse;
 import academy.devdojo.dto.ProducerPutRequest;
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 
-import java.util.List;
-
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ProducerMapper {
-    Producer toProducer(ProducerPostRequest postRequest);
 
-    Producer toProducer(ProducerPutRequest putRequest);
+  Producer toProducer(ProducerPostRequest postRequest);
 
-    ProducerGetResponse toProducerGetResponse(Producer producer);
+  Producer toProducer(ProducerPutRequest putRequest);
 
-    ProducerPostResponse toProducerPostResponse(Producer producer);
+  ProducerGetResponse toProducerGetResponse(Producer producer);
 
-    List<ProducerGetResponse> toProducerGetResponseList(List<Producer> producers);
+  ProducerPostResponse toProducerPostResponse(Producer producer);
+
+  List<ProducerGetResponse> toProducerGetResponseList(List<Producer> producers);
 
 }

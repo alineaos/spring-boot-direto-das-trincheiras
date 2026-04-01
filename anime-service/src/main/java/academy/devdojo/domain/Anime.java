@@ -22,10 +22,11 @@ import lombok.With;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Anime {
-    @EqualsAndHashCode.Include
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    @Column(nullable = false)
-    String name;
+
+  @EqualsAndHashCode.Include
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  Long id;
+  @Column(nullable = false)
+  String name;
 }
