@@ -10,11 +10,13 @@ spring:
     jpa:
       show-sql: true
       hibernate:
-        ddl-auto: update
+        ddl-auto: none
     # criação de threads virtuais
     threads:
       virtual:
         enabled: true
+    flyway: # Ativa automaticamente com o uso da dependência no pom.xml
+      enabled: true
 logging:
   level:
     academy.devdojo: debug
